@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Test</title>
+</head>
+
+<body>
+    <h1>Hello</h1>
+    <button id="grab">Grab Kigaru Files</button>
+    <ul></ul>
+
+    <script>
+        const electron = require('electron');
+        const {ipcRenderer} = electron;
+        const util = require('util');
+        const exec = util.promisify(require('child_process').exec);
+
+        const grab = document.querySelector('#grab');
+        grab.addEventListener('click', gitCall);
+
+        function gitCall(){
+            exec('git clone https://github.com/mark-huynh/kigaruweb.git && cd kigaruweb && npm install')
+        }
+
+        const ul = document.querySelector('ul');
+        ipcRenderer.on('item:add', function(e, item){
+            const li = document.createElement('li');
+            const itemText = document.createTextNode(item);
+            li.appendChild(itemText);
+            ul.appendChild(li);
+        })
+    </script>
+</body>
+
+</html>
