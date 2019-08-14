@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Document</title>
+</head>
+
+<body>
+    <h1></h1>
+    <form>
+        <div id="input-area">
+            <label>Enter Item Name (Please enter full name exactly as it shows on the website)</label>
+            <input type="text" id="name" autofocus>
+        </div>
+        <button type='submit'>Submit</button>
+    </form>
+</body>
+
+<script>
+    const electron = require('electron');
+    const { ipcRenderer } = electron;
+
+    let remove = false;
+    let price = false;
+    let desc = false;
+    let image = false;
+
+    //Initalizing page
+    let filePath = "";
+    const h1 = document.querySelector("h1");
+    ipcRenderer.on('remove:open', function (e, item) {
+        filePath = item;
+        remove = true;
+        h1.innerHTML = "Removing from: " + filePath;
+    })
+    ipcRenderer.on('price:open', function (e, item) {
+        filePath = item;
+        price = true;
+        h1.innerHTML = "Changing price of item in: " + filePath;
+        var label = document.createElement("label");
+        var textnode = document.createTextNode("Input the new price of this item")
+        label.appendChild(textnode);
+        document.getElementById("input-area").appendChild(label);
+        var input = document.createElement("input");
+        input.id = "price";
+        document.getElementById("input-area").appendChild(input);
+    })
+
+
+    
+    //Handling remove, TODO: generalize for remove, change price, desc, and pic
+    const form = document.querySelector('form');
+    form.addEventListener('submit', submitForm);
+
+    function submitForm(e) {
+        e.preventDefault();
+        const name = document.querySelector('#name').value;
+
+        if(remove)
+        {
+            const payload = new Array(filePath, name);
+            ipcRenderer.send('item:remove', payload);
+        }
+        else if(price)
+        {
+            const price = document.querySelector('#price').value;
+            const payload = new Array(filePath, name, price);
+            ipcRenderer.send('item:price', payload);
+        }
+        else if(desc)
+        {
+            
+        }
+        else if(image)
+        {
+            
+        }
+    }
+
+</script>
+
+</html>

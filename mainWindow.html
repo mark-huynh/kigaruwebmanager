@@ -56,6 +56,24 @@
             ipcRenderer.send('add:open', selected);
         }
 
+        //Remove button
+        const remove = document.querySelector('#remove');
+        remove.addEventListener('click', openRemoveWindow);
+
+        function openRemoveWindow(){
+            const selectedType = document.getElementById("type").value;
+            ipcRenderer.send('remove:open', selectedType);
+        }
+
+        //Price button
+        const price = document.querySelector('#price');
+        price.addEventListener('click', openPriceWindow);
+
+        function openPriceWindow(){
+            const selectedType = document.getElementById("type").value;
+            ipcRenderer.send('price:open', selectedType);
+        }
+
 
 
 
@@ -73,6 +91,18 @@
         ipcRenderer.on('item:add', function (e, item) {
             const li = document.createElement('li');
             const itemText = document.createTextNode("Added Item: " + item[2] + item[3] + item[4]);
+            li.appendChild(itemText);
+            ul.appendChild(li);
+        })
+        ipcRenderer.on('item:remove', function (e, item) {
+            const li = document.createElement('li');
+            const itemText = document.createTextNode("Removed Item: " + item[1] + " from " + item[0]);
+            li.appendChild(itemText);
+            ul.appendChild(li);
+        })
+        ipcRenderer.on('item:price', function (e, item) {
+            const li = document.createElement('li');
+            const itemText = document.createTextNode("Changed Item Price: " + item[1] + " to " + item[2] + " from " + item[0]);
             li.appendChild(itemText);
             ul.appendChild(li);
         })
