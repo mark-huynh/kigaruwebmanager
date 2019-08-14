@@ -1,0 +1,16 @@
+.main-wrapper div{
+    padding: 20px;
+}
+
+.main-wrapper select{
+    display: block;
+}
+
+.modify-wrapper label,
+.modify-wrapper input{
+    display: block;
+}
+
+.modify-wrapper label{
+    padding-top: 10px;
+}

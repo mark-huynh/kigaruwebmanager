@@ -47,8 +47,8 @@ function createAddWindow() {
     webPreferences: {
       nodeIntegration: true
     },
-    width: 300,
-    height: 200,
+    width: 800,
+    height: 500,
     title: "Add Menu item"
   });
   //load html file into window
@@ -70,8 +70,8 @@ function createModifyWindow(){
     webPreferences: {
       nodeIntegration: true
     },
-    width: 300,
-    height: 200,
+    width: 800,
+    height: 300,
     title: "Modify items"
   });
   //load html file into window
@@ -155,6 +155,13 @@ ipcMain.on("item:description", function(e, item){
 })
 
 
+
+
+//Catch final submit
+ipcMain.on('finalSubmit', function(){
+  console.log("submitted")
+})
+
 //Adding item to js file
 function addItem(item) {
   exec("py adder.py " + item[0] + " " + item[1] + " " + item[2] + " " + item[3] + " " + item[4]);
@@ -172,7 +179,7 @@ function priceItem(item){
 
 //Changing item description from js file
 function descItem(item){
-  exec("python description.py " + item[0] + " " + item[1] + " " + item[2]);
+  exec("py description.py " + item[0] + " " + item[1] + " " + item[2]);
 }
 
 const mainMenuTemplate = [
