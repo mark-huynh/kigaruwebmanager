@@ -114,6 +114,14 @@ ipcMain.on("price:open", function(e, item) {
 })
 
 
+//Catch description:open
+ipcMain.on("description:open", function(e, item) {
+  createModifyWindow();
+  setTimeout(function() {
+    modifyWindow.webContents.send("description:open", item);
+  }, 1000); //TODO: Fix so it is done synchronously
+})
+
 
 
 
@@ -139,6 +147,13 @@ ipcMain.on("item:price", function(e, item){
   modifyWindow.close();
 })
 
+//Catch item:description
+ipcMain.on("item:description", function(e, item){
+  descItem(item);
+  mainWindow.webContents.send("item:description", item);
+  modifyWindow.close();
+})
+
 
 //Adding item to js file
 function addItem(item) {
@@ -153,6 +168,11 @@ function removeItem(item){
 //Changing item price from js file
 function priceItem(item){
   exec("py price.py " + item[0] + " " + item[1] + " " + item[2]);
+}
+
+//Changing item description from js file
+function descItem(item){
+  exec("python description.py " + item[0] + " " + item[1] + " " + item[2]);
 }
 
 const mainMenuTemplate = [

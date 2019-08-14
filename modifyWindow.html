@@ -45,6 +45,18 @@
         input.id = "price";
         document.getElementById("input-area").appendChild(input);
     })
+    ipcRenderer.on('description:open', function (e, item) {
+        filePath = item;
+        desc = true;
+        h1.innerHTML = "Changing Description of item in: " + filePath;
+        var label = document.createElement("label");
+        var textnode = document.createTextNode("Input the new description of this item")
+        label.appendChild(textnode);
+        document.getElementById("input-area").appendChild(label);
+        var input = document.createElement("input");
+        input.id = "description";
+        document.getElementById("input-area").appendChild(input);
+    })
 
 
     
@@ -69,7 +81,9 @@
         }
         else if(desc)
         {
-            
+            const description = document.querySelector('#description').value;
+            const payload = new Array(filePath, name, description);
+            ipcRenderer.send('item:description', payload);
         }
         else if(image)
         {

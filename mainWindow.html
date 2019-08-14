@@ -74,6 +74,15 @@
             ipcRenderer.send('price:open', selectedType);
         }
 
+        //Description button
+        const description = document.querySelector('#desc');
+        description.addEventListener('click', openDescriptionWindow);
+
+        function openDescriptionWindow(){
+            const selectedType = document.getElementById("type").value;
+            ipcRenderer.send('description:open', selectedType);
+        }
+
 
 
 
@@ -103,6 +112,12 @@
         ipcRenderer.on('item:price', function (e, item) {
             const li = document.createElement('li');
             const itemText = document.createTextNode("Changed Item Price: " + item[1] + " to " + item[2] + " from " + item[0]);
+            li.appendChild(itemText);
+            ul.appendChild(li);
+        })
+        ipcRenderer.on('item:description', function (e, item) {
+            const li = document.createElement('li');
+            const itemText = document.createTextNode("Changed Item Description: " + item[1] + " to " + item[2] + " from " + item[0]);
             li.appendChild(itemText);
             ul.appendChild(li);
         })
