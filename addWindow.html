@@ -4,7 +4,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Yo</h1>
+    <h1></h1>
     <form>
         <div>
             <label>Enter Item Name</label>
@@ -32,9 +32,20 @@
             const name = document.querySelector('#name').value;
             const price = document.querySelector('#price').value;
             const description = document.querySelector('#description').value;
-            const item = new Array(name, price, description);
+            const item = new Array(fileToBeChanged, name, price, description);
             ipcRenderer.send('item:add', item);
+
         }
+
+
+        //Initalizing page
+        let fileToBeChanged = "";
+        const h1 = document.querySelector("h1");
+        ipcRenderer.on('add:open', function (e, item) {
+            fileToBeChanged = item;
+            console.log(item);
+            h1.innerHTML = item;
+    })
     </script>
 </body>
 </html>

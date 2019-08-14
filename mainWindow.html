@@ -2,31 +2,73 @@
 <html lang="en">
 
 <head>
-    <title>Test</title>
+    <title>Kigaru Web Manager</title>
 </head>
 
 <body>
-    <h1>Hello</h1>
+    <h1>Kigaru Web Manager</h1>
     <button id="grab">Grab Kigaru Files</button>
-    <ul></ul>
+    <!-- Disable button if certain files exit -->
+    <button id="update">Update Kigaru Files</button>
+    <!-- Will call a git pull, and after first click say it is updated -->
+    <div>
+        Modify menu:
+        <select id="type">
+                <option value="sushi">Sushi Items</option>
+                <option value="maindish">Main Dishes</option>
+                <option value="appetizer">Appetizers</option>
+                <option value="drinks">Drinks/Dessert</option>
+            </select>
+            <select id='empty'>
+            </select>
+        
+            <button id="add">Add</button>
+            <button id='remove'>Remove</button>
+            <button id="price">Change price</button>
+            <button id="desc">Change description</button>
+            <button id="img">Add image</button>
+        
+    </div>
+    <div>
+        Added Items:
+        <ul></ul>
+    </div>
+    <button id="submit">Submit all changes</button>
 
     <script>
+
         const electron = require('electron');
-        const {ipcRenderer} = electron;
+        const { ipcRenderer } = electron;
         const util = require('util');
         const exec = util.promisify(require('child_process').exec);
 
+
+        //Add button
+        const add = document.querySelector('#add');
+        add.addEventListener('click', openAddWindow);
+
+        function openAddWindow(){
+            const selected = document.getElementById("type").value;
+            ipcRenderer.send('add:open', selected);
+        }
+
+
+
+
+        //Grab Kigaru Files button
         const grab = document.querySelector('#grab');
         grab.addEventListener('click', gitCall);
 
-        function gitCall(){
+        function gitCall() {
             exec('git clone https://github.com/mark-huynh/kigaruweb.git && cd kigaruweb && npm install')
         }
 
+
+        //Adding info to UL
         const ul = document.querySelector('ul');
-        ipcRenderer.on('item:add', function(e, item){
+        ipcRenderer.on('item:add', function (e, item) {
             const li = document.createElement('li');
-            const itemText = document.createTextNode(item);
+            const itemText = document.createTextNode("Added Item: " + item);
             li.appendChild(itemText);
             ul.appendChild(li);
         })
