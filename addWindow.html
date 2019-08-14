@@ -32,19 +32,20 @@
             const name = document.querySelector('#name').value;
             const price = document.querySelector('#price').value;
             const description = document.querySelector('#description').value;
-            const item = new Array(fileToBeChanged, name, price, description);
-            ipcRenderer.send('item:add', item);
+            const fullChange = new Array(filePath, sectionName, name, price, description);
+            ipcRenderer.send('item:add', fullChange);
 
         }
 
 
         //Initalizing page
-        let fileToBeChanged = "";
+        let filePath = "";
+        let sectionName = "";
         const h1 = document.querySelector("h1");
         ipcRenderer.on('add:open', function (e, item) {
-            fileToBeChanged = item;
-            console.log(item);
-            h1.innerHTML = item;
+            filePath = item[0];
+            sectionName = item[1]
+            h1.innerHTML = "Adding to: " + filePath + ", " + sectionName;
     })
     </script>
 </body>

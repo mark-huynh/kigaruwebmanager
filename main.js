@@ -13,6 +13,7 @@ let addWindow;
 
 app.on("ready", function() {
   //Create new window
+  console.log(test.gunkan);
   mainWindow = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true
@@ -80,8 +81,8 @@ ipcMain.on("item:add", function(e, item) {
 });
 
 //Adding item to js file
-async function addItem(item) {
-//   exec("py test.py " + item[0] + " " + item[1] + " " + item[2]);
+function addItem(item) {
+  exec("py adder.py " + item[0] + " " + item[1] + " " + item[2] + " " + item[3] + " " + item[4]);
 }
 
 const mainMenuTemplate = [
