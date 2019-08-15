@@ -228,6 +228,7 @@
             return;
             }
             h3.innerHTML = "Grabbing files..."
+            disableAllButtons();
             await exec('git clone https://github.com/mark-huynh/kigaruweb.git && cd kigaruweb && npm install');
             h3.innerHTML = "Done! Files are installed."
             hasFiles = true;

@@ -1,4 +1,5 @@
 import sys
+import os
 
 def peek_line(f):
     pos = f.tell()
@@ -21,7 +22,7 @@ outfile = open('./kigaruweb/src/food/temp' + str(sys.argv[1]) + '.js', 'w+')
 while infile_2.tell() < numLines:
     line = infile_2.readline()
     next = peek_line(infile_2)
-    if str(sys.argv[2]) in next:
+    if str(sys.argv[2]) in next and 'name:' in next.split():
         count = 1
     if count == 7:
         count = 0
@@ -44,3 +45,5 @@ for line in lines:
 
 infile.close()
 outfile.close()
+
+os.remove('./kigaruweb/src/food/temp' + str(sys.argv[1]) + '.js')

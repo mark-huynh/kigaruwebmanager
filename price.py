@@ -17,7 +17,7 @@ for line in lines:
     if skip == True:
         skip = False
         continue
-    if str(sys.argv[2]) in line:
+    if str(sys.argv[2]) in line and 'name:' in line.split():
         outfile.write(line)
         outfile.write("    price: " + sys.argv[3] + ',\n')
         skip = True

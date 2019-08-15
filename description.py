@@ -19,7 +19,7 @@ for line in lines:
         continue
     if skip == True:
         counter += 1
-    if str(sys.argv[2]) in line:
+    if str(sys.argv[2]) in line and 'name:' in line.split():
         skip = True
     outfile.write(line)
         

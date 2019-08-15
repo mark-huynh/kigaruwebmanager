@@ -44,12 +44,18 @@ app.on("ready", function() {
     })
     ); //same as passing in file://dirname/mainWindow.html
     
-    mainWindow.on('close', function() { //   <---- Catch close event
-      console.log('HI');
+    mainWindow.on('close', function(event) { //   <---- Catch close event
+      event.preventDefault();
+
       // The dialog box below will open, instead of your app closing.
       dialog.showMessageBox({
-          message: "Close button has been pressed!",
-          buttons: ["OK"]
+          message: "Are you sure you want to quit? All changes will be discarded",
+          buttons: ["Yes", "No"]
+      }, (response) => {
+        if(response === 0)
+        {
+          unsaveQuit();
+        }
       });
     });
   //build menu from template
@@ -60,9 +66,14 @@ app.on("ready", function() {
 
   //Quit everything when close
   mainWindow.on("closed", () => {
-    app.quit();
+    app.exit();
   });
 });
+
+async function unsaveQuit(){
+  await exec('cd kigaruweb && git reset --hard HEAD');
+  app.exit();
+}
 
 //Handle creating a new window
 
@@ -259,22 +270,22 @@ ipcMain.on("commitMessage", function(e, item){
 
 //Adding item to js file
 function addItem(item) {
-  exec("py adder.py " + item[0] + " " + item[1] + " " + item[2] + " " + item[3] + " " + item[4]);
+  exec("python adder.py " + item[0] + " " + item[1] + " " + item[2] + " " + item[3] + " " + item[4]);
 }
 
 //Removing item from js file
 function removeItem(item){
-  exec("py remove.py " + item[0] + " " + item[1]);
+  exec("python remove.py " + item[0] + " " + item[1]);
 }
 
 //Changing item price from js file
 function priceItem(item){
-  exec("py price.py " + item[0] + " " + item[1] + " " + item[2]);
+  exec("python price.py " + item[0] + " " + item[1] + " " + item[2]);
 }
 
 //Changing item description from js file
 function descItem(item){
-  exec("py description.py " + item[0] + " " + item[1] + " " + item[2]);
+  exec("python description.py " + item[0] + " " + item[1] + " " + item[2]);
 }
 
 const mainMenuTemplate = [
