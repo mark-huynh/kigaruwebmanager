@@ -29,6 +29,7 @@ app.on("ready", function() {
     }
   });
 
+  
   //load html file into window
   mainWindow.loadURL(
     url.format({
@@ -36,8 +37,16 @@ app.on("ready", function() {
       protocol: "file:",
       slashes: true
     })
-  ); //same as passing in file://dirname/mainWindow.html
-
+    ); //same as passing in file://dirname/mainWindow.html
+    
+    mainWindow.on('close', function() { //   <---- Catch close event
+      console.log('HI');
+      // The dialog box below will open, instead of your app closing.
+      dialog.showMessageBox({
+          message: "Close button has been pressed!",
+          buttons: ["OK"]
+      });
+    });
   //build menu from template
 
   // const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
@@ -211,12 +220,16 @@ ipcMain.on('finalSubmit', function(){
 //deploy function
 
 async function deploy(item){
-  await exec('cd kigaruweb && git add --all && git commit -m "' + item + ' && git push && npm run deploy');
+  await exec('cd kigaruweb && git add src && git commit -m "' + item);
+  await exec('cd kigaruweb && git push');
+  await exec('cd kigaruweb && npm run deploy');
   let options = {
     buttons: ["Ok"],
     message: "Deployed! The webpage should be updated within the next ~5 minutes"
   }
-  dialog.showMessageBox(options);}
+  dialog.showMessageBox(options, (reponse) => {
+    mainWindow.close();
+  });}
 
 //blank commit message handle
 ipcMain.on("blankCommit", function(){
@@ -232,7 +245,7 @@ ipcMain.on("commitMessage", function(e, item){
   commitWindow.close();
   let options = {
     buttons: ["Ok"],
-    message: "Deploying! Another pop up will pop up when page is deployed. DO NOT close the main window"
+    message: "Deploying! This may take a while. Another pop up will pop up when page is deployed. DO NOT close the main window"
   }
   dialog.showMessageBox(options);
   deploy(item);
