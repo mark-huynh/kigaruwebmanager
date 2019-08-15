@@ -13,7 +13,7 @@
             <label>Enter Item Name (Please enter full name exactly as it shows on the website)</label>
             <input type="text" id="name" autofocus>
         </div>
-        <button type='submit'>Submit</button>
+        <button id= 'submit' type='submit'>Submit</button>
     </form>
 </body>
 
@@ -22,7 +22,6 @@
     const { ipcRenderer } = electron;
 
     const { dialog } = require('electron').remote;
-    getFilePath();
     
     let remove = false;
     let price = false;
@@ -73,20 +72,29 @@
         var fileExplorer = document.createElement("button");
         fileExplorer.appendChild(document.createTextNode("Choose .jpg image"))
         document.getElementById("input-area").appendChild(fileExplorer);
+        fileExplorer.addEventListener('click', getFilePath);
+        var locationText = document.createElement("div");
+        locationText.id = "path-text";
+        document.getElementById("input-area").appendChild(locationText);
+        document.getElementById("path-text").appendChild(document.createTextNode(""));
+
     })
     //TODO: open file explorer of only images of .jpg on click of the button and store the path. 
     //    console.log(dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] }))
 
+    let imgPath = "";
 
     async function getFilePath(){
         let test = await dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] }, (filePaths) => {
-            console.log(filePaths);
+            imgPath = filePaths;
+            document.getElementById("path-text").removeChild(document.getElementById("path-text").childNodes[0]);
+            document.getElementById("path-text").appendChild(document.createTextNode(filePaths));
         });
     }
 
     //Handling remove, TODO: generalize for remove, change price, desc, and pic
-    const form = document.querySelector('form');
-    form.addEventListener('submit', submitForm);
+    const submit = document.querySelector('#submit');
+    submit.addEventListener('click', (e) => submitForm(e));
 
     function submitForm(e) {
         e.preventDefault();
@@ -110,7 +118,9 @@
         }
         else if(image)
         {
-            
+            //file path to constant file, import name for item, item name that is given picture
+            const payload = new Array(imgPath, filePath, name);
+            ipcRenderer.send('item:picture', payload);
         }
     }
 

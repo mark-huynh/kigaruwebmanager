@@ -224,6 +224,13 @@ ipcMain.on("item:description", function(e, item){
   modifyWindow.close();
 })
 
+//Catch item:picture
+ipcMain.on("item:picture", function(e, item){
+  picItem(item);
+  mainWindow.webContents.send("item:picture", item);
+  modifyWindow.close();
+})
+
 
 
 
@@ -295,6 +302,14 @@ function priceItem(item){
 //Changing item description from js file
 function descItem(item){
   exec("python description.py " + item[0] + " " + item[1] + " " + item[2]);
+}
+
+//Adding item picture to js file
+function picItem(item){
+  //copy item[0] path item to correct folder
+  //somehow decide a name
+  //pass item[1], item[2], and decided name to python script
+  console.log("git it")
 }
 
 const mainMenuTemplate = [
