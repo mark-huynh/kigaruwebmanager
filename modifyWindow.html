@@ -21,6 +21,9 @@
     const electron = require('electron');
     const { ipcRenderer } = electron;
 
+    const { dialog } = require('electron').remote;
+    getFilePath();
+    
     let remove = false;
     let price = false;
     let desc = false;
@@ -44,6 +47,7 @@
         document.getElementById("input-area").appendChild(label);
         var input = document.createElement("input");
         input.id = "price";
+        input.type = "number"
         document.getElementById("input-area").appendChild(input);
     })
     ipcRenderer.on('description:open', function (e, item) {
@@ -58,9 +62,28 @@
         input.id = "description";
         document.getElementById("input-area").appendChild(input);
     })
+    ipcRenderer.on('picture:open', function (e, item) {
+        filePath = item;
+        image = true;
+        h1.innerHTML = "Changing Picture of item in: " + filePath;
+        var label = document.createElement("label");
+        var textnode = document.createTextNode("Choose the image that you would like to add to this item")
+        label.appendChild(textnode);
+        document.getElementById("input-area").appendChild(label);
+        var fileExplorer = document.createElement("button");
+        fileExplorer.appendChild(document.createTextNode("Choose .jpg image"))
+        document.getElementById("input-area").appendChild(fileExplorer);
+    })
+    //TODO: open file explorer of only images of .jpg on click of the button and store the path. 
+    //    console.log(dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] }))
 
 
-    
+    async function getFilePath(){
+        let test = await dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] }, (filePaths) => {
+            console.log(filePaths);
+        });
+    }
+
     //Handling remove, TODO: generalize for remove, change price, desc, and pic
     const form = document.querySelector('form');
     form.addEventListener('submit', submitForm);

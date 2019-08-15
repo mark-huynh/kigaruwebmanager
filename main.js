@@ -3,7 +3,7 @@ const url = require("url");
 const path = require("path");
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
-const fs = require("fs"); // Or `import fs from "fs";` with ESM
+const fs = require("fs");
 
 
 const { app, BrowserWindow, Menu, ipcMain } = electron;
@@ -180,6 +180,15 @@ ipcMain.on("description:open", function(e, item) {
   createModifyWindow();
   setTimeout(function() {
     modifyWindow.webContents.send("description:open", item);
+  }, 1000); //TODO: Fix so it is done synchronously
+})
+
+
+//Catch picture:open
+ipcMain.on("picture:open", function(e, item) {
+  createModifyWindow();
+  setTimeout(function() {
+    modifyWindow.webContents.send("picture:open", item);
   }, 1000); //TODO: Fix so it is done synchronously
 })
 

@@ -211,6 +211,14 @@
             ipcRenderer.send('description:open', selectedType);
         }
 
+        //Picture button
+        const img = document.querySelector('#img');
+        img.addEventListener('click', openImgWindow);
+
+        function openImgWindow(){
+            const selectedType = document.getElementById("type").value;
+            ipcRenderer.send('picture:open', selectedType);
+        }
 
 
         h3 = document.querySelector('#status');
