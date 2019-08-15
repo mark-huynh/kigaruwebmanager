@@ -3,13 +3,22 @@ const url = require("url");
 const path = require("path");
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
+const fs = require("fs"); // Or `import fs from "fs";` with ESM
+
 
 const { app, BrowserWindow, Menu, ipcMain } = electron;
 
 let mainWindow;
 let addWindow;
 let modifyWindow;
+let commitWindow;
+const { dialog } = require('electron');
 
+if (fs.existsSync('./kigaruweb')) {
+  console.log("hi")
+}else{
+  console.log("bye")
+}
 //Listen for app to be ready
 
 app.on("ready", function() {
@@ -19,6 +28,7 @@ app.on("ready", function() {
       nodeIntegration: true
     }
   });
+
   //load html file into window
   mainWindow.loadURL(
     url.format({
@@ -87,6 +97,32 @@ function createModifyWindow(){
     modifyWindow = null;
   }); 
 }
+
+
+function openCommitWindow(){
+  commitWindow = new BrowserWindow({
+    webPreferences: {
+      nodeIntegration: true
+    },
+    width: 800,
+    height: 300,
+    title: "Save Message",
+    frame: false
+  });
+  //load html file into window
+  commitWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname, "commitWindow.html"),
+      protocol: "file:",
+      slashes: true
+    })
+  );
+
+  commitWindow.on("close", function() {
+    commitWindow = null;
+  }); 
+}
+
 
 //Catch add:open
 ipcMain.on("add:open", function(e, item) {
@@ -159,7 +195,48 @@ ipcMain.on("item:description", function(e, item){
 
 //Catch final submit
 ipcMain.on('finalSubmit', function(){
-  console.log("submitted")
+  let options = {
+    buttons: ["Yes", "No", "Cancel"],
+    message: "Are you sure you want to save and deploy the changes you made to the website? (Click simulate to check what your changes will look like)"
+  }
+  dialog.showMessageBox(options, (response) => {
+    if(response === 0)
+    {
+      openCommitWindow();
+    }
+  })
+})
+
+
+//deploy function
+
+async function deploy(item){
+  await exec('cd kigaruweb && git add --all && git commit -m "' + item + ' && git push && npm run deploy');
+  let options = {
+    buttons: ["Ok"],
+    message: "Deployed! The webpage should be updated within the next ~5 minutes"
+  }
+  dialog.showMessageBox(options);}
+
+//blank commit message handle
+ipcMain.on("blankCommit", function(){
+  let options = {
+    buttons: ["Ok"],
+    message: "Please enter a save message"
+  }
+  dialog.showMessageBox(options);
+})
+
+//deploy handle
+ipcMain.on("commitMessage", function(e, item){
+  commitWindow.close();
+  let options = {
+    buttons: ["Ok"],
+    message: "Deploying! Another pop up will pop up when page is deployed. DO NOT close the main window"
+  }
+  dialog.showMessageBox(options);
+  deploy(item);
+  
 })
 
 //Adding item to js file

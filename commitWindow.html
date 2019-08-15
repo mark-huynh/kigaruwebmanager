@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Save Window</title>
+</head>
+<body>
+    <div>
+        **REQUIRED** Please enter a brief save message about your changes in the case an error occurs
+    </div>
+    <div>
+        <textarea autofocus rows="4" cols="50"></textarea>
+    </div>
+    <button>submit</button>>
+
+
+    <script>
+       const electron = require('electron');
+        const {ipcRenderer} = electron;
+        let submit = document.querySelector("button");
+        submit.addEventListener('click', () => {
+            let input = document.querySelector("textarea").value;
+            if(input === "")
+            {
+                ipcRenderer.send("blankCommit");
+            }
+            else{
+                ipcRenderer.send("commitMessage", input);
+            }
+        })
+    </script>
+</body>
+</html>
