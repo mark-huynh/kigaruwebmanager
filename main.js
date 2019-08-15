@@ -14,11 +14,7 @@ let modifyWindow;
 let commitWindow;
 const { dialog } = require('electron');
 
-if (fs.existsSync('./kigaruweb')) {
-  console.log("hi")
-}else{
-  console.log("bye")
-}
+
 //Listen for app to be ready
 
 app.on("ready", function() {
@@ -29,7 +25,16 @@ app.on("ready", function() {
     }
   });
 
+  setTimeout(() => {
+    if (fs.existsSync('./kigaruweb')) {
+      mainWindow.webContents.send("filesExist");
+    }else{
+      mainWindow.webContents.send("filesDontExist");
+    }
+  }, 1000) //FIX
+
   
+
   //load html file into window
   mainWindow.loadURL(
     url.format({

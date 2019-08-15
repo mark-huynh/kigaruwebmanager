@@ -67,8 +67,7 @@
 
     function submitForm(e) {
         e.preventDefault();
-        const name = document.querySelector('#name').value;
-
+        const name = '\"' + document.querySelector('#name').value + '\"';
         if(remove)
         {
             const payload = new Array(filePath, name);
@@ -76,13 +75,13 @@
         }
         else if(price)
         {
-            const price = document.querySelector('#price').value;
+            const price = '\"' + document.querySelector('#price').value + '\"';
             const payload = new Array(filePath, name, price);
             ipcRenderer.send('item:price', payload);
         }
         else if(desc)
         {
-            const description = document.querySelector('#description').value;
+            const description = '\"' + document.querySelector('#description').value + '\"';
             const payload = new Array(filePath, name, description);
             ipcRenderer.send('item:description', payload);
         }

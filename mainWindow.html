@@ -18,11 +18,11 @@
     <select id="type">
     <option value="sushi">Sushi Items</option>
     <option value="maindish">Main Dishes</option>
-    <option value="appetizer">Appetizers</option>
+    <option value="appetizers">Appetizers</option>
     <option value="drinks">Drinks/Dessert</option>
     </select>
+        In category:
     <select id='section'>
-    <option>makirolls</option>
     </select>
     <button id="add">Add</button>
     <button id='remove'>Remove</button>
@@ -31,7 +31,7 @@
     <button id="img">Add image</button></div>
         
     </div>
-    <div>Added Items:
+    <div>Changes:
         <ul></ul>
     </div>
     <div><button id="simulate">Simulate</button>
@@ -39,11 +39,139 @@
 
     <script>
 
+        const sushiSections = [
+                {
+                    text: "Nigiri (1pc)",
+                    value: "nigiri"
+                },
+                {
+                    text: "Gunkan (2pc)",
+                    value: "gunkan"
+                },
+                {
+                    text: "Maki / Rolls",
+                    value: "makirolls"
+                }
+            ];
+
+        const mainDishSections = [
+                {
+                    text: "Japanese Curry",
+                    value: "japaneseCurry"
+                },
+                {
+                    text: "Ramen/Udon",
+                    value: "noodles"
+                },
+                {
+                    text: "Donburi",
+                    value: "donburi"
+                }
+            ];
+
+
+        const appetizerSections = [
+                {
+                    text: "Appetizers",
+                    value: "appetizers"
+                }
+            ];
+
+        const drinksSections = [
+                {
+                    text: "Beer",
+                    value: "beer"
+                },
+                {
+                    text: "Chu-Hi",
+                    value: "chuHi"
+                },
+                {
+                    text: "Soft Drinks",
+                    value: "softDrinks"
+                },
+                {
+                    text: "Dessert",
+                    value: "dessert"
+                }
+            ];
+
+
         const electron = require('electron');
         const { ipcRenderer } = electron;
         const util = require('util');
         const exec = util.promisify(require('child_process').exec);
+        let hasFiles = false;
+        
+        function disableAllButtons(){
+            document.querySelectorAll('button').forEach(ele => {
+            ele.disabled = true;
+        })
+        }
 
+        function disableAllButGrab(){
+            document.querySelectorAll('button:not(#grab)').forEach(ele => {
+            ele.disabled = true;
+        })
+        }
+
+        function enableAllButtons(){
+            document.querySelectorAll('button').forEach(ele => {
+            ele.disabled = false;
+        })
+        }
+
+        //If kigaru files do not exist
+        ipcRenderer.on("filesDontExist", () => {
+            hasFiles = false;
+            disableAllButGrab();
+        });
+
+        ipcRenderer.on("filesExist", () => {
+            enableAllButtons();
+            document.querySelector('#grab').disabled = true;
+            hasFiles = true;
+        }
+        );
+
+        //Filling out the second drop down
+        let typeSelect = document.getElementById("type");
+        let sectionDrop = document.getElementById("section");
+        typeSelect.addEventListener('change', () => {
+            let chosenType = typeSelect.options[typeSelect.selectedIndex].value;
+            if(chosenType === "sushi")
+        {
+            sectionDrop.innerHTML = "";
+            sushiSections.forEach(item => sectionDrop.options.add(
+            new Option(item.text, item.value)
+        ))
+        }
+        else if(chosenType === "maindish")
+        {
+            sectionDrop.innerHTML = "";
+            mainDishSections.forEach(item => sectionDrop.options.add(
+            new Option(item.text, item.value)
+        ))
+        }
+        else if(chosenType === "appetizers")
+        {
+            sectionDrop.innerHTML = "";
+            appetizerSections.forEach(item => sectionDrop.options.add(
+            new Option(item.text, item.value)
+        ))
+        }
+        else if(chosenType === "drinks")
+        {
+            sectionDrop.innerHTML = "";
+            drinksSections.forEach(item => sectionDrop.options.add(
+            new Option(item.text, item.value)
+        ))
+        }
+        })
+
+        //Default dropdown is sushi
+        sushiSections.forEach(item => sectionDrop.options.add(
+            new Option(item.text, item.value)));
 
         //Add button
         const add = document.querySelector('#add');
@@ -92,9 +220,19 @@
         grab.addEventListener('click', gitCall);
 
         async function gitCall() {
+            if(hasFiles){
+                h3.innerHTML = "You already have the files needed"
+                setTimeout(function(){
+                h3.innerHTML = "";
+            }, 10000);
+            return;
+            }
             h3.innerHTML = "Grabbing files..."
             await exec('git clone https://github.com/mark-huynh/kigaruweb.git && cd kigaruweb && npm install');
             h3.innerHTML = "Done! Files are installed."
+            hasFiles = true;
+            enableAllButtons();
+            document.querySelector('#grab').disabled = true;
             setTimeout(function(){
                 h3.innerHTML = "";
             }, 10000);
@@ -128,7 +266,7 @@
         const ul = document.querySelector('ul');
         ipcRenderer.on('item:add', function (e, item) {
             const li = document.createElement('li');
-            const itemText = document.createTextNode("Added Item: " + item[2] + item[3] + item[4]);
+            const itemText = document.createTextNode("Added Item: " + item[2] + " " + item[3] + " " + item[4]);
             li.appendChild(itemText);
             ul.appendChild(li);
         })

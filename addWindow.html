@@ -30,12 +30,11 @@
 
         function submitForm(e){
             e.preventDefault();
-            const name = document.querySelector('#name').value;
+            const name = '\"' + document.querySelector('#name').value + '\"';
             const price = document.querySelector('#price').value;
-            const description = document.querySelector('#description').value;
+            const description = '\"' + document.querySelector('#description').value + '\"';
             const fullChange = new Array(filePath, sectionName, name, price, description);
             ipcRenderer.send('item:add', fullChange);
-
         }
 
 
