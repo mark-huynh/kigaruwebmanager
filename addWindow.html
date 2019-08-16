@@ -12,7 +12,7 @@
             <input type="text" id="name" autofocus>
 
             <label>Enter Item Price</label>
-            <input type="text" id="price">
+            <input type="number" id="price">
 
             <label>Enter Item Description</label>
             <input type="text" id="description">
@@ -28,6 +28,19 @@
         const form = document.querySelector('form');
         form.addEventListener('submit', submitForm);
 
+
+        submitButton = document.querySelector("button");
+
+        disableSubmit();
+
+        function disableSubmit(){
+            submitButton.disabled = true;
+        }
+
+        function enableSubmit(){
+            submitButton.disabled = false;
+        }
+
         function submitForm(e){
             e.preventDefault();
             const name = '\"' + document.querySelector('#name').value + '\"';
@@ -37,6 +50,21 @@
             ipcRenderer.send('item:add', fullChange);
         }
 
+        nameInput = document.querySelector('#name');
+        priceInput = document.querySelector('#price');
+
+        nameInput.addEventListener('input', validateEmpty)
+        priceInput.addEventListener('input', validateEmpty)
+
+        function validateEmpty() {
+            if(nameInput.value != "" && priceInput.value != "")
+            {
+                enableSubmit();
+            }
+            else{
+                disableSubmit();
+            }
+        }
 
         //Initalizing page
         let filePath = "";

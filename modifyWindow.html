@@ -46,6 +46,7 @@
         input.id = "price";
         input.type = "number"
         document.getElementById("input-area").appendChild(input);
+
     })
     ipcRenderer.on('description:open', function (e, item) {
         filePath = item;
@@ -58,6 +59,7 @@
         var input = document.createElement("input");
         input.id = "description";
         document.getElementById("input-area").appendChild(input);
+        
     })
     ipcRenderer.on('picture:open', function (e, item) {
         filePath = item;
@@ -77,8 +79,11 @@
         document.getElementById("path-text").appendChild(document.createTextNode(""));
 
     })
-    //TODO: open file explorer of only images of .jpg on click of the button and store the path. 
-    //    console.log(dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] }))
+    setTimeout(function(){
+        document.querySelectorAll('#input-area input').forEach(e => {
+            e.addEventListener('input', checkValid)
+        });
+    }, 1500); //FIX
 
     let imgPath = "";
 
@@ -87,6 +92,7 @@
             imgPath = filePaths;
             document.getElementById("path-text").removeChild(document.getElementById("path-text").childNodes[0]);
             document.getElementById("path-text").appendChild(document.createTextNode(filePaths));
+            checkValid();
         });
     }
 
@@ -122,6 +128,65 @@
             ipcRenderer.send('item:picture', payload);
         }
     }
+
+
+    function checkValid(){
+        const nameField = document.querySelector('#name').value !== "";
+        if(remove)
+        {
+            if(nameField)
+            {
+                enableSubmit();
+            }
+            else{
+                disableSubmit();
+            }
+        }
+        else if(price)
+        {
+            if(document.querySelector('#price').value !== "" && nameField)
+            {
+                enableSubmit();
+            }
+            else{
+                disableSubmit();
+            }
+        }
+        else if(desc)
+        {
+            if(document.querySelector('#description').value !== "" && nameField)
+            {
+                enableSubmit();
+            }
+            else{
+                disableSubmit();
+            }
+        }
+        else if(image)
+        {
+            console.log(imgPath);
+            let stringImgPath = '\"' + imgPath + '\"';
+            console.log(stringImgPath);
+            if(imgPath !== "" && nameField && imgPath.length !== 0)
+            {
+                enableSubmit();
+            }
+            else{
+                disableSubmit();
+            }
+        }
+    }
+
+    function disableSubmit(){
+            submit.disabled = true;
+        }
+
+        function enableSubmit(){
+            submit.disabled = false;
+        }
+
+    //default disable submit
+    disableSubmit();
 
 </script>
 

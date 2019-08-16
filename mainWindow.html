@@ -103,6 +103,15 @@
         const exec = util.promisify(require('child_process').exec);
         let hasFiles = false;
         
+
+        function disableSubmit(){
+            submit.disabled = true;
+        }
+
+        function enableSubmit(){
+            submit.disabled = false;
+        }
+
         function disableAllButtons(){
             document.querySelectorAll('button').forEach(ele => {
             ele.disabled = true;
@@ -116,7 +125,7 @@
         }
 
         function enableAllButtons(){
-            document.querySelectorAll('button').forEach(ele => {
+            document.querySelectorAll('button:not(#submit)').forEach(ele => {
             ele.disabled = false;
         })
         }
@@ -278,24 +287,35 @@
             const itemText = document.createTextNode("Added Item: " + item[2] + " " + item[3] + " " + item[4]);
             li.appendChild(itemText);
             ul.appendChild(li);
+            enableSubmit();
         })
         ipcRenderer.on('item:remove', function (e, item) {
             const li = document.createElement('li');
             const itemText = document.createTextNode("Removed Item: " + item[1] + " from " + item[0]);
             li.appendChild(itemText);
             ul.appendChild(li);
+            enableSubmit();
         })
         ipcRenderer.on('item:price', function (e, item) {
             const li = document.createElement('li');
             const itemText = document.createTextNode("Changed Item Price: " + item[1] + " to " + item[2] + " from " + item[0]);
             li.appendChild(itemText);
             ul.appendChild(li);
+            enableSubmit();
         })
         ipcRenderer.on('item:description', function (e, item) {
             const li = document.createElement('li');
             const itemText = document.createTextNode("Changed Item Description: " + item[1] + " to " + item[2] + " from " + item[0]);
             li.appendChild(itemText);
             ul.appendChild(li);
+            enableSubmit();
+        })
+        ipcRenderer.on('item:picture', function (e, item) {
+            const li = document.createElement('li');
+            const itemText = document.createTextNode("Added image: " + item[0] + " to " + item[2]);
+            li.appendChild(itemText);
+            ul.appendChild(li);
+            enableSubmit();
         })
 
 
