@@ -260,7 +260,7 @@ async function deploy(item){
     message: "Deployed! The webpage should be updated within the next ~5 minutes"
   }
   dialog.showMessageBox(options, (reponse) => {
-    mainWindow.close();
+    app.exit();
   });}
 
 //blank commit message handle
@@ -286,30 +286,30 @@ ipcMain.on("commitMessage", function(e, item){
 
 //Adding item to js file
 function addItem(item) {
-  exec("python adder.py " + item[0] + " " + item[1] + " " + item[2] + " " + item[3] + " " + item[4]);
+  exec("py adder.py " + item[0] + " " + item[1] + " " + item[2] + " " + item[3] + " " + item[4]);
 }
 
 //Removing item from js file
 function removeItem(item){
-  exec("python remove.py " + item[0] + " " + item[1]);
+  exec("py remove.py " + item[0] + " " + item[1]);
 }
 
 //Changing item price from js file
 function priceItem(item){
-  exec("python price.py " + item[0] + " " + item[1] + " " + item[2]);
+  exec("py price.py " + item[0] + " " + item[1] + " " + item[2]);
 }
 
 //Changing item description from js file
 function descItem(item){
-  exec("python description.py " + item[0] + " " + item[1] + " " + item[2]);
+  exec("py description.py " + item[0] + " " + item[1] + " " + item[2]);
 }
 
 //Adding item picture to js file
-function picItem(item){
-  //copy item[0] path item to correct folder
-  //somehow decide a name
+async function picItem(item){
+  await exec("copy " + item[0] + " \"./kigaruweb/src/pictures/food\"")
+  importName = path.basename(item[0]).toLowerCase().split(".jpg")[0].replace(/\s/g, '');
   //pass item[1], item[2], and decided name to python script
-  console.log("git it")
+  await exec("py picture.py " + item[1] + " " + importName + " " + item[2]);
 }
 
 const mainMenuTemplate = [

@@ -8,13 +8,11 @@
 
 <body class='modify-wrapper'>
     <h1></h1>
-    <form>
         <div id="input-area">
             <label>Enter Item Name (Please enter full name exactly as it shows on the website)</label>
             <input type="text" id="name" autofocus>
         </div>
         <button id= 'submit' type='submit'>Submit</button>
-    </form>
 </body>
 
 <script>
@@ -71,8 +69,8 @@
         document.getElementById("input-area").appendChild(label);
         var fileExplorer = document.createElement("button");
         fileExplorer.appendChild(document.createTextNode("Choose .jpg image"))
-        document.getElementById("input-area").appendChild(fileExplorer);
         fileExplorer.addEventListener('click', getFilePath);
+        document.getElementById("input-area").appendChild(fileExplorer);
         var locationText = document.createElement("div");
         locationText.id = "path-text";
         document.getElementById("input-area").appendChild(locationText);
@@ -85,7 +83,7 @@
     let imgPath = "";
 
     async function getFilePath(){
-        let test = await dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] }, (filePaths) => {
+            dialog.showOpenDialog({ properties: ['openFile'], filters:[{name: 'Images', extensions: ['jpg']}] }, (filePaths) => {
             imgPath = filePaths;
             document.getElementById("path-text").removeChild(document.getElementById("path-text").childNodes[0]);
             document.getElementById("path-text").appendChild(document.createTextNode(filePaths));
@@ -119,7 +117,8 @@
         else if(image)
         {
             //file path to constant file, import name for item, item name that is given picture
-            const payload = new Array(imgPath, filePath, name);
+            let stringImgPath = '\"' + imgPath + '\"';
+            const payload = new Array(stringImgPath, filePath, name);
             ipcRenderer.send('item:picture', payload);
         }
     }
