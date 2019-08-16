@@ -65,10 +65,12 @@ app.on("ready", function() {
   // Menu.setApplicationMenu(mainMenu);
 
   //Quit everything when close
-  mainWindow.on("closed", () => {
+  mainWindow.on("closed", async function(){
+    await exec('taskkill /f /im node.exe')
     app.exit();
   });
 });
+
 
 async function unsaveQuit(){
   await exec('cd kigaruweb && git reset --hard HEAD');

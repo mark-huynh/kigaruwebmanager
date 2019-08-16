@@ -274,10 +274,13 @@
         //Simulate webpage
         const simulate = document.querySelector('#simulate');
         simulate.addEventListener('click', startServer);
-
+    
         async function startServer(){
             //TODO: kill everything that is on port 3000 already
+            h3.innerHTML = "Currently simulating website, on http://localhost:3000/ . It might take a bit to start up."
+            simulate.disabled = true;
             await exec("cd kigaruweb && npm start");
+            simulate.disabled = false;
        }
 
         //Adding info to UL
