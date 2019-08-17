@@ -1,5 +1,7 @@
 **This version of Electron only works on Window OS (will incorporate Mac OS if business uses a new computer)
 
+See kigaru-web-manager-prod for production app with .exe
+
 Upon clone ensure you have installed:
 
 - Git
