@@ -10,7 +10,7 @@ Upon clone ensure you have installed:
 Run:
 
 ```
-npm install
+npm package-win
 ```
 
 and set up git credentials through:
