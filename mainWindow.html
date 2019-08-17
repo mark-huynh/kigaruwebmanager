@@ -327,6 +327,12 @@
         submit.addEventListener('click', () => {
             ipcRenderer.send('finalSubmit');
         })
+
+        ipcRenderer.on('disable', function () {
+            disableAllButtons();
+        }
+        );
+
     </script>
 </body>
 

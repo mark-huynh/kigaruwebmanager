@@ -74,6 +74,7 @@ app.on("ready", function() {
 
 async function unsaveQuit(){
   await exec('cd kigaruweb && git reset --hard HEAD');
+  await exec('taskkill /f /im node.exe')
   app.exit();
 }
 
@@ -282,6 +283,7 @@ ipcMain.on("commitMessage", function(e, item){
     message: "Deploying! This may take a while. Another pop up will pop up when page is deployed. DO NOT close the main window"
   }
   dialog.showMessageBox(options);
+  mainWindow.webContents.send("disable");
   deploy(item);
   
 })
@@ -308,9 +310,8 @@ function descItem(item){
 
 //Adding item picture to js file
 async function picItem(item){
-  await exec("copy " + item[0] + " \"./kigaruweb/src/pictures/food\"")
   importName = path.basename(item[0]).toLowerCase().split(".jpg")[0].replace(/\s/g, '');
-  //pass item[1], item[2], and decided name to python script
+  await exec("copy " + item[0] + " \"./kigaruweb/src/pictures/food/" + importName + '.jpg\"')
   await exec("py picture.py " + item[1] + " " + importName + " " + item[2]);
 }
 

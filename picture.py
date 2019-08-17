@@ -6,7 +6,7 @@ infile.close()
 
 outfile = open("./kigaruweb/src/food/" + str(sys.argv[1]) + ".js", 'w')
 
-outfile.write("import " + sys.argv[2] + " from './pictures/food/" + sys.argv[2] + ".jpg'\n")
+outfile.write("import " + sys.argv[2] + " from '../pictures/food/" + sys.argv[2] + ".jpg'\n")
 
 
 skip = False
