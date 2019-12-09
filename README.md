@@ -2,6 +2,8 @@
 
 **See kigaru-web-manager-prod for production app with .exe**
 
+This manager will allow authenticated users to be able to update the Kigaru Website (kigaru-sushi.com). This manager utilizes python scripts that will update menu items using git scripts, allowing the entire website to run without a backend.
+
 Upon clone ensure you have installed:
 
 - Git
