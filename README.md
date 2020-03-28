@@ -1,5 +1,6 @@
 <h2>*This project is now deprecated</h2>
-**Backend has shifted to serverless AWS. Go to new [management repo](https://github.com/mark-huynh/kigaru-manager)**
+
+Backend has shifted to serverless AWS. New [management repo](https://github.com/mark-huynh/kigaru-manager).
 
 **This version of Electron only works on Window OS (will incorporate Mac OS if business uses a new computer)
 
